@@ -13,33 +13,18 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val timeThread by lazy {
+    private var isReverseMode = false
+
+    private val timeThread by lazy {
         Thread(Runnable {
             run {
                 while(true){
-                    val now = System.currentTimeMillis()
-                    val date = Date(now)
-                    val sdf = SimpleDateFormat("HH:mm:ss")
-                    val getTime = sdf.format(date)
+                    val getTime = SimpleDateFormat("HH:mm:ss").format(Date(System.currentTimeMillis()))
 
                     Handler(Looper.getMainLooper()).post {
                         tv_time.text = getTime
-
                         val seconds = getTime.split(":")[2].toInt()
-
-                        if(isReverseMode){
-                            if(seconds % 2 ==0) {
-                                tv_time.setTextColor(Color.BLUE)
-                            }else{
-                                tv_time.setTextColor(Color.RED)
-                            }
-                        }else{
-                            if(seconds % 2 ==0) {
-                                tv_time.setTextColor(Color.RED)
-                            }else{
-                                tv_time.setTextColor(Color.BLUE)
-                            }
-                        }
+                        setTimeTextColor(seconds)
                     }
 
                     SystemClock.sleep(500)
@@ -48,7 +33,23 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    var isReverseMode = false
+    private fun setTimeTextColor(seconds: Int) {
+        if (seconds % 2 == 0) {
+            if(isReverseMode){
+                tv_time.setTextColor(Color.BLUE)
+                return
+            }
+
+            tv_time.setTextColor(Color.RED)
+        }else{
+            if(isReverseMode){
+                tv_time.setTextColor(Color.RED)
+                return
+            }
+
+            tv_time.setTextColor(Color.BLUE)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
