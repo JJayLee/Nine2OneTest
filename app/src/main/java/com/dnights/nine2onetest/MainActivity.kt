@@ -3,35 +3,21 @@ package com.dnights.nine2onetest
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
 
+    private val compositeDisposable = CompositeDisposable()
+
     private var isReverseMode = false
-
-    private val timeThread by lazy {
-        Thread(Runnable {
-            run {
-                while(true){
-                    val getTime = SimpleDateFormat("HH:mm:ss").format(Date(System.currentTimeMillis()))
-
-                    Handler(Looper.getMainLooper()).post {
-                        tv_time.text = getTime
-                        val seconds = getTime.split(":")[2].toInt()
-                        setTimeTextColor(seconds)
-                    }
-
-                    SystemClock.sleep(100)
-                }
-            }
-        })
-    }
 
     private fun setTimeTextColor(seconds: Int) {
         if (seconds % 2 == 0) {
@@ -54,7 +40,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        timeThread.start()
+
+        Observable.interval(100,TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                val getTime = SimpleDateFormat("HH:mm:ss").format(Date(System.currentTimeMillis()))
+                tv_time.text = getTime
+                val seconds = getTime.split(":")[2].toInt()
+                setTimeTextColor(seconds)
+            }.apply {
+                compositeDisposable.add(this)
+            }
 
         button_change.setOnClickListener {
             isReverseMode = !isReverseMode
@@ -63,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        timeThread.interrupt()
+        compositeDisposable.clear()
         super.onDestroy()
     }
 
