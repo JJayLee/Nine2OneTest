@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
                         setTimeTextColor(seconds)
                     }
 
-                    SystemClock.sleep(500)
+                    SystemClock.sleep(100)
                 }
             }
         })
