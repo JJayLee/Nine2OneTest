@@ -49,13 +49,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Observable.interval(100,TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
+        Observable.interval(200,TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.computation())
+            .map {
+                SimpleDateFormat("HH:mm:ss")
+                    .format(Date(System.currentTimeMillis()))
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                val getTime = SimpleDateFormat("HH:mm:ss").format(Date(System.currentTimeMillis()))
-                tv_time.text = getTime
-                val seconds = getTime.split(":")[2].toInt()
+                tv_time.text = it
+
+                val seconds = it.split(":")[2].toInt()
                 setTimeTextColor(seconds)
             }.apply {
                 compositeDisposable.add(this)
