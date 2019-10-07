@@ -19,24 +19,29 @@ class MainActivity : AppCompatActivity() {
 
     private var isReverseMode = false
 
-    private fun setTimeTextColor(seconds: Int) {
-        val red = ContextCompat.getColorStateList(this@MainActivity,R.color.textRed)
-        val blue = ContextCompat.getColorStateList(this@MainActivity,R.color.textBlue)
+    val redColor by lazy {
+        ContextCompat.getColorStateList(this@MainActivity,R.color.textRed)
+    }
 
+    val blueColor by lazy {
+        ContextCompat.getColorStateList(this@MainActivity,R.color.textBlue)
+    }
+
+    private fun setTimeTextColor(seconds: Int) {
         if (seconds % 2 == 0) {
             if(isReverseMode){
-                tv_time.setTextColor(blue)
+                tv_time.setTextColor(blueColor)
                 return
             }
 
-            tv_time.setTextColor(red)
+            tv_time.setTextColor(redColor)
         }else{
             if(isReverseMode){
-                tv_time.setTextColor(red)
+                tv_time.setTextColor(redColor)
                 return
             }
 
-            tv_time.setTextColor(blue)
+            tv_time.setTextColor(blueColor)
         }
     }
 
