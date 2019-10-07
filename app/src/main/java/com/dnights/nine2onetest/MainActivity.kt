@@ -1,8 +1,8 @@
 package com.dnights.nine2onetest
 
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -20,20 +20,23 @@ class MainActivity : AppCompatActivity() {
     private var isReverseMode = false
 
     private fun setTimeTextColor(seconds: Int) {
+        val red = ContextCompat.getColorStateList(this@MainActivity,R.color.textRed)
+        val blue = ContextCompat.getColorStateList(this@MainActivity,R.color.textBlue)
+
         if (seconds % 2 == 0) {
             if(isReverseMode){
-                tv_time.setTextColor(Color.BLUE)
+                tv_time.setTextColor(blue)
                 return
             }
 
-            tv_time.setTextColor(Color.RED)
+            tv_time.setTextColor(red)
         }else{
             if(isReverseMode){
-                tv_time.setTextColor(Color.RED)
+                tv_time.setTextColor(red)
                 return
             }
 
-            tv_time.setTextColor(Color.BLUE)
+            tv_time.setTextColor(blue)
         }
     }
 
