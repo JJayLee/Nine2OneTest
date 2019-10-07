@@ -36,7 +36,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="change" />
+            android:text="change"
+            android:fontFamily="@font/kopubdotumlight"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
